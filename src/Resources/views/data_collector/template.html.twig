@@ -2,7 +2,7 @@
 
 {% block toolbar %}
     {% set queryCount = collector.queries|length  %}
-    {% set resultCount = collector.queries|length  %}
+    {% set resultCount = collector.results|length  %}
     {% set icon %}
         {# this is the content displayed as a panel in the toolbar #}
         <svg xmlns="http://www.w3.org/2000/svg">{# TODO #}</svg>
