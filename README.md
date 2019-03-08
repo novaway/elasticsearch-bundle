@@ -30,7 +30,7 @@ And voila, when you use this client for search, the queries and requests will be
 
 ## Integration with the novaway/elasticsearch-client
 
-You can of course use this bundle the [novaway/elasticsearch-client](https://github.com/novaway/elasticsearch-client), you only need to pass the Client to the Indexes
+You can of course use this bundle with the [novaway/elasticsearch-client](https://github.com/novaway/elasticsearch-client), you only need to pass the Client to the Indexes
 
 ## License
 
