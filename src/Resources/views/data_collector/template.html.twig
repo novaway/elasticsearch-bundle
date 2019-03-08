@@ -1,0 +1,54 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+    {% set queryCount = collector.queries|length  %}
+    {% set resultCount = collector.queries|length  %}
+    {% set icon %}
+        {# this is the content displayed as a panel in the toolbar #}
+        <svg xmlns="http://www.w3.org/2000/svg">{# TODO #}</svg>
+        <span class="sf-toolbar-value">ES {{ queryCount }} / {{ resultCount }}</span>
+    {% endset %}
+
+    {% set text %}
+        {# this is the content displayed when hovering the mouse over
+           the toolbar panel #}
+        <div class="sf-toolbar-info-piece">
+            <b>Queries</b>
+            <span>{{ queryCount }}</span>
+        </div>
+
+        <div class="sf-toolbar-info-piece">
+            <b>Results</b>
+            <span>{{ resultCount }}</span>
+        </div>
+    {% endset %}
+
+    {# the 'link' value set to 'false' means that this panel doesn't
+       show a section in the web profiler #}
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: true }) }}
+{% endblock %}
+
+{% block menu %}
+    {# This left-hand menu appears when using the full-screen profiler. #}
+    <span class="label">
+        <span class="icon">{# TODO #}</span>
+        <strong>Elastic Search</strong>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    {# Optional, for showing the most details. #}
+    <h2>Search</h2>
+    <table width="100%">
+        <tr>
+            <th>Query</th>
+            <th>Result</th>
+        </tr>
+            {% for key, query in collector.queries %}
+                <tr>
+                    <td><pre>{{ query|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre></td>
+                    <td><pre>{{ (collector.results[key] ?? 'No Result')|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre></td>
+                </tr>
+            {% endfor %}
+    </table>
+{% endblock %}
