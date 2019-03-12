@@ -12,12 +12,14 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 class ElasticsearchDataCollector  extends DataCollector implements EventSubscriberInterface
 {
-    const QUERIES_KEY = 'queries';
-    const RESULTS_KEY  = 'results';
+    /** @var array  */
+    protected $queries = [];
+    /** @var array  */
+    protected $results = [];
 
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
-
+        // everything is collected via Events
     }
 
     public function getName()
@@ -27,27 +29,28 @@ class ElasticsearchDataCollector  extends DataCollector implements EventSubscrib
 
     public function reset()
     {
-        $this->data = [];
+        $this->queries = [];
+        $this->results = [];
     }
 
     public function getQueries(): array
     {
-        return $this->data[self::QUERIES_KEY];
+        return $this->queries;
     }
 
     public function getResults(): array
     {
-        return $this->data[self::RESULTS_KEY];
+        return $this->results;
     }
 
     public function onSearchQuery(SearchQuery $event)
     {
-        $this->data[self::QUERIES_KEY][$event->getTimestamp()] = $event->getBody();
+        $this->queries[$event->getTimestamp()] = $event->getBody();
     }
 
     public function onSearchResult(SearchResult $event)
     {
-        $this->data[self::RESULTS_KEY][$event->getTimestamp()] = $event->getBody();
+        $this->results[$event->getTimestamp()] = $event->getBody();
     }
 
     public static function getSubscribedEvents()
