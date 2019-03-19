@@ -18,7 +18,7 @@ class Client extends \Elasticsearch\Client
      */
     public function search($params = array()): array
     {
-        $timestamp = (string)time();
+        $timestamp = (string)microtime();
         $this->dispatcher->dispatch(SearchQuery::NAME, new SearchQuery($params, $timestamp));
         $result = parent::search($params);
         $this->dispatcher->dispatch(SearchResult::NAME, new SearchResult($result, $timestamp));
