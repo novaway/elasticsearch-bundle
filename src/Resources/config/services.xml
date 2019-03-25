@@ -13,5 +13,9 @@
                  id="novaway_elasticsearch.data_collector"
             />
         </service>
+
+        <service id="Novaway\ElasticsearchBundle\Logger\SearchEventLogger">
+            <tag name="kernel.event_subscriber"/>
+        </service>
     </services>
 </container>
