@@ -1,5 +1,14 @@
 {% extends '@WebProfiler/Profiler/layout.html.twig' %}
 
+{% block head %}
+   {{ parent() }}
+    <style>
+        .container {
+            max-width: 100%;
+        }
+    </style>
+{% endblock %}
+
 {% block toolbar %}
     {% set queryCount = collector.queries|length  %}
     {% set resultCount = collector.results|length  %}
@@ -39,16 +48,35 @@
 {% block panel %}
     {# Optional, for showing the most details. #}
     <h2>Search</h2>
+    <h3>Dump</h3>
     <table width="100%">
         <tr>
             <th>Query</th>
             <th>Result</th>
         </tr>
-            {% for key, query in collector.queries %}
-                <tr>
-                    <td><pre>{{ query|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre></td>
-                    <td><pre>{{ (collector.results[key] ?? 'No Result')|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre></td>
-                </tr>
-            {% endfor %}
+        {% for key, query in collector.queries %}
+            <tr>
+                <td>
+                    <pre>{{ dump(query) }}</pre></td>
+                <td>
+                    <pre>{{ dump(collector.results[key] ?? 'No Result') }}</pre>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <h3>Json</h3>
+    <table width="100%">
+        <tr>
+            <th>Query</th>
+            <th>Result</th>
+        </tr>
+        {% for key, query in collector.queries %}
+            <tr>
+                <td>
+                    <pre>{{ query|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+                </td>
+                <td><pre>{{ (collector.results[key] ?? 'No Result')|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre></td>
+            </tr>
+        {% endfor %}
     </table>
 {% endblock %}
