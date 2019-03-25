@@ -10,8 +10,6 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 class NovawayElasticsearchExtension extends Extension
 {
-    const BASE_CONFIGURATION_KEY = 'novaway_elasticsearch';
-
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));

@@ -17,7 +17,7 @@ class ConfigureLoggerPass implements CompilerPassInterface
             try {
                 $argumentLogger = $container->findDefinition($config['logger']);
             } catch (ServiceNotFoundException $e) {
-                $msg = sprintf('Error when trying to find the %s.logging.logger : %s', 'test', $e->getMessage());
+                $msg = sprintf('Error when trying to find the novaway_elasticsearch.logging.logger : %s', $e->getMessage());
                 throw new ServiceNotFoundException($e->getId(), $e->getSourceId(), $e->getPrevious(), $e->getAlternatives(), $msg);
             }
             $searchLogger = $container->findDefinition(SearchEventLogger::class);
