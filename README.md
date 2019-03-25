@@ -13,7 +13,7 @@ The Client is provided by the [Novaway\ElasticsearchBundle\Factory\ClientFactory
 composer require novaway/elasticsearch-bundle
 ```
 
-## Configuration
+## Service configuration
 
 You probably want to register the Client as a service. To do so, use the ClientFactory
 ```yml
@@ -27,6 +27,19 @@ services:
 
 ```
 And voila, when you use this client for search, the queries and requests will be collected, and added to the SymfonyToolbar
+
+
+## Configuration
+
+
+```yml
+# config/package/novaway_elasticsearch.yaml
+novaway_elasticsearch:
+    logging:
+        enabled: false # if true, log every search request with a LoggerInterface service
+        logger: 'logger' # the logger service id
+```
+
 
 ## Integration with the novaway/elasticsearch-client
 
