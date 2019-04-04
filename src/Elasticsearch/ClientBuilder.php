@@ -8,6 +8,7 @@ use Elasticsearch\Transport;
 
 /**
  * @method Client build()
+ * @deprecated Will be removed when the focus really shifts to supporting ruflin\Elastica
  */
 class ClientBuilder extends \Elasticsearch\ClientBuilder
 {

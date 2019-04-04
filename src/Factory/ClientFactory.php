@@ -9,6 +9,11 @@ use Elasticsearch\Serializers\SerializerInterface;
 use Novaway\ElasticsearchBundle\Elasticsearch\Client;
 use Novaway\ElasticsearchBundle\Elasticsearch\ClientBuilder;
 
+/**
+ * Class ClientFactory
+ * @package Novaway\ElasticsearchBundle\Factory
+ * @deprecated Will be removed when the focus really shifts to supporting ruflin\Elastica
+ */
 class ClientFactory
 {
     public function createClient(array $hosts, SerializerInterface $serializer = null): Client
