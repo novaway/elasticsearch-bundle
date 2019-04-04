@@ -6,7 +6,7 @@
   "homepage": "https://github.com/novaway/elasticsearch-bundle",
   "license": "MIT",
   "require": {
-    "php": "^7.0",
+    "php": "^7.1",
     "elasticsearch/elasticsearch": "^5.2 || ^6.0",
     "ruflin/elastica": "^6.0 || ^7.0",
     "symfony/http-kernel": "^3.4|^4.1",
