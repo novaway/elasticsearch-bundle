@@ -22,7 +22,7 @@ class Index extends \Elastica\Index
     }
 
 
-    public function createSearch($query = '', $options = null, BuilderInterface $builder = null)
+    public function createSearch($query = '', $options = null, BuilderInterface $builder = null): Search
     {
         $search = new Search($this->dispatcher,  $this->getClient(), $builder);
         $search->addIndex($this);

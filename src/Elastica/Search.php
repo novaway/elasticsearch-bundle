@@ -5,6 +5,7 @@ namespace Novaway\ElasticsearchBundle\Elastica;
 
 
 use Elastica\Client;
+use Elastica\ResultSet;
 use Elastica\ResultSet\BuilderInterface;
 use Novaway\ElasticsearchBundle\Event\SearchQuery;
 use Novaway\ElasticsearchBundle\Event\SearchResult;
@@ -23,20 +24,21 @@ class Search extends \Elastica\Search
         $this->dispatcher = $dispatcher;
     }
 
-    public function search($query = '', $options = null)
+    public function search($query = '', $options = null): ResultSet
     {
-
-        $result =  parent::search($query, $options);
         $timestamp = (string)microtime();
         $this->dispatcher->dispatch(SearchQuery::NAME, new SearchQuery([
             'body' => $this->getQuery()->toArray() + $this->getOptions(),
             'type' => $this->getTypes(),
             'indices' => $this->getIndices(),
         ], $timestamp));
+        $result =  parent::search($query, $options);
+
         $this->dispatcher->dispatch(SearchResult::NAME, new SearchResult([
             'query_time' => $result->getResponse()->getQueryTime(),
             'response' => $result->getResponse()->getData()
         ], $timestamp));
+
         return $result;
     }
 
