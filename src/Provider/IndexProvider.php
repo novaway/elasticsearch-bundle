@@ -6,7 +6,9 @@ namespace Novaway\ElasticsearchBundle\Provider;
 
 use Elastica\Request;
 use Elastica\Response;
-use Novaway\ElasticsearchBundle\Elastica\Client;
+use Elastica\Client;
+use Elasticsearch\Endpoints\Indices\Alias\Exists;
+use Elasticsearch\Endpoints\Indices\Alias\Get;
 use Novaway\ElasticsearchBundle\Elastica\Index;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -38,16 +40,38 @@ class IndexProvider
         return new Index($this->eventDispatcher, $this->client, $this->name);
     }
 
-    public function rebuildIndex($markAsLive = true): Index
+    public function rebuildIndex($markAsLive = true, $removeOldIndexes = true): Index
     {
-        $realName = sprintf('%s_%s', $this->name, date('YmdHis'));
-        $index = $this->newIndex($realName);
+        $markedAslive = false;
+        try {
+            //
+            $oldIndexes = $this->getCurrentIndexes();
 
-        // Actually create the Index with Mapping
-        $index->create($this->config);
+            $realName = sprintf('%s_%s', $this->name, date('YmdHis'));
+            $index = $this->getIndexByName($realName);
 
-        if ($markAsLive) {
-            $this->markAsLive($index);
+            // Actually create the Index with Mapping
+            $index->create($this->config);
+
+            if (true === $markAsLive) {
+                $this->markAsLive($index);
+                $markedAslive = true;
+                if (true === $removeOldIndexes)
+                    // if eveyrything went well, the new index is set as the alias
+                    // we can now remove the old indexes
+                    foreach ($oldIndexes as $oldIndex) {
+                        $oldIndex->delete();
+                    }
+            }
+
+
+        } catch (\Exception $e) {
+            if (isset($index) && false === $markedAslive) {
+                // if the new index is created and not markedAsLive
+                // we must remove the created and unlinked one
+                $index->delete();
+            }
+            throw $e;
         }
 
         return $index;
@@ -63,8 +87,30 @@ class IndexProvider
         return $this->client->request('_aliases', Request::POST, $data);
     }
     
-    protected function newIndex($name): Index
+    protected function getIndexByName($name): Index
     {
         return new Index($this->eventDispatcher, $this->client, $name);
+    }
+
+    /**
+     * Return indexes currently pointing on alias
+     * Sould return only one index, provided no problem occured
+     *
+     * @return Index[]
+     */
+    protected function getCurrentIndexes(): iterable
+    {
+        $existAlias = new Exists();
+        $existAlias->setName($this->name);
+        if (200 !== $this->client->requestEndpoint($existAlias)->getStatus()) {
+            // alias doesn't already exist, there is no oldIndexes
+            return [];
+        }
+        $getAlias = new Get();
+        $getAlias->setName($this->name);
+        $response = $this->client->requestEndpoint($getAlias);
+        foreach ($response->getData() as $indexName => $value) {
+            yield $this->getIndexByName($indexName);
+        }
     }
 }
