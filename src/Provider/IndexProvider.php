@@ -40,51 +40,75 @@ class IndexProvider
         return new Index($this->eventDispatcher, $this->client, $this->name);
     }
 
+    /**
+     * Build uniquely named index in Client
+     *
+     * @param bool $markAsLive          Link the newly built index to
+     * @param bool $removeOldIndexes
+     * @return Index
+     *
+     * @throws \Exception
+     */
     public function rebuildIndex($markAsLive = true, $removeOldIndexes = true): Index
     {
-        $markedAslive = false;
-        try {
-            //
-            $oldIndexes = $this->getCurrentIndexes();
 
-            $realName = sprintf('%s_%s', $this->name, date('YmdHis'));
-            $index = $this->getIndexByName($realName);
+        $realName = sprintf('%s_%s', $this->name, date('YmdHis'));
+        $index = $this->getIndexByName($realName);
 
-            // Actually create the Index with Mapping
-            $index->create($this->config);
+        // Actually create the Index with Mapping
+        $index->create($this->config);
 
-            if (true === $markAsLive) {
-                $this->markAsLive($index);
-                $markedAslive = true;
-                if (true === $removeOldIndexes)
-                    // if eveyrything went well, the new index is set as the alias
-                    // we can now remove the old indexes
-                    foreach ($oldIndexes as $oldIndex) {
-                        $oldIndex->delete();
-                    }
-            }
-
-
-        } catch (\Exception $e) {
-            if (isset($index) && false === $markedAslive) {
-                // if the new index is created and not markedAsLive
-                // we must remove the created and unlinked one
-                $index->delete();
-            }
-            throw $e;
+        if (true === $markAsLive) {
+            // if it failed to mark as live, return current index
+            $index = $this->markAsLive($index, $removeOldIndexes) ? $index : $this->getIndex();
         }
 
         return $index;
     }
 
-    public function markAsLive(Index $index): Response
+    /**
+     * Remove $this->name alias from each Index
+     * and set it on $index
+     *
+     * @param Index $index The index to link to the $this->name alias
+     * @param bool $removeOldIndexes If true, remove the indexes currently linked to $this->name alias after marking $index as live
+     *
+     * @return bool index is markedAsLive
+     */
+    public function markAsLive(Index $index, bool $removeOldIndexes = true): bool
     {
-        $data = ['actions' => []];
+        // Retrieve indexes currently pointing on the alias $this->>name
+        $oldIndexes = $this->getCurrentIndexes() ;
 
-        $data['actions'][] = ['remove' => ['index' => '*', 'alias' => $this->name]];
-        $data['actions'][] = ['add' => ['index' => $index->getName(), 'alias' => $this->name]];
+        try {
+            $data = ['actions' => []];
 
-        return $this->client->request('_aliases', Request::POST, $data);
+            $data['actions'][] = ['remove' => ['index' => '*', 'alias' => $this->name]];
+            $data['actions'][] = ['add' => ['index' => $index->getName(), 'alias' => $this->name]];
+
+            $this->client->request('_aliases', Request::POST, $data);
+        } catch (\Exception $e) {
+            // a faliure occured during the marking of the new index a live
+            // set the first as the old ones, and set it back as the alias
+            $oldIndex = reset($oldIndexes);
+            if ($oldIndex instanceof Index) {
+                $this->markAsLive($oldIndex, $removeOldIndexes);
+            }
+            // and delete the failed one
+            $index->delete();
+            return false;
+        }
+        if ($removeOldIndexes) {
+            // if everything went well, the new index is set as the alias
+            // we can now remove the old indexes
+            foreach ($oldIndexes as $oldIndex) {
+                if ($oldIndex->getName() !== $index->getName()) {
+                    $oldIndex->delete();
+                }
+            }
+        }
+
+        return true;
     }
     
     protected function getIndexByName($name): Index
@@ -98,7 +122,7 @@ class IndexProvider
      *
      * @return Index[]
      */
-    protected function getCurrentIndexes(): iterable
+    protected function getCurrentIndexes(): array
     {
         $existAlias = new Exists();
         $existAlias->setName($this->name);
@@ -109,8 +133,10 @@ class IndexProvider
         $getAlias = new Get();
         $getAlias->setName($this->name);
         $response = $this->client->requestEndpoint($getAlias);
+        $results = [];
         foreach ($response->getData() as $indexName => $value) {
-            yield $this->getIndexByName($indexName);
+            $results[] = $this->getIndexByName($indexName);
         }
+        return $results;
     }
 }
