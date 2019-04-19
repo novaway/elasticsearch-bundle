@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace Novaway\ElasticsearchBundle\Elastica;
 
-
-use Elastica\Client;
 use Elastica\ResultSet;
+use Elastica\Client;
 use Elastica\ResultSet\BuilderInterface;
 use Novaway\ElasticsearchBundle\Event\SearchQuery;
 use Novaway\ElasticsearchBundle\Event\SearchResult;

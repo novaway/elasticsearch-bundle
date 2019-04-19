@@ -12,7 +12,9 @@
     "symfony/http-kernel": "^3.4|^4.1",
     "symfony/dependency-injection": "^4.2",
     "symfony/web-profiler-bundle": "^4.2",
-    "symfony/config": "^4.2"
+    "symfony/config": "^4.2",
+    "webmozart/assert": "^1.0",
+    "ext-curl": "*"
   },
   "require-dev": {
     "symfony/var-dumper": "^4.1",
