@@ -47,7 +47,7 @@ class Client extends  \Elastica\Client
 
         $i = 0;
         $httpCode = null;
-        while (!(is_int($httpCode) && $httpCode >= 200 && $httpCode <399)) {
+        while (!(is_int($httpCode) && $httpCode >= 200 && $httpCode <= 399)) {
             if ($i != 0) {
                 sleep(1);
             }
@@ -57,7 +57,7 @@ class Client extends  \Elastica\Client
             curl_setopt($ch, CURLOPT_HEADER, TRUE);
             curl_setopt($ch, CURLOPT_NOBODY, TRUE); // remove body
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-            $head = curl_exec($ch);
+            curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
