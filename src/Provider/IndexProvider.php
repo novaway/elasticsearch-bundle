@@ -5,8 +5,7 @@ namespace Novaway\ElasticsearchBundle\Provider;
 
 
 use Elastica\Request;
-use Elastica\Response;
-use Elastica\Client;
+use Novaway\ElasticsearchBundle\Elastica\Client;
 use Elasticsearch\Endpoints\Indices\Alias\Exists;
 use Elasticsearch\Endpoints\Indices\Alias\Get;
 use Novaway\ElasticsearchBundle\Elastica\Index;
