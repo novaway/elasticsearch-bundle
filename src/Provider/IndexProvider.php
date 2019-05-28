@@ -10,6 +10,7 @@ use Elasticsearch\Endpoints\Indices\Alias\Exists;
 use Elasticsearch\Endpoints\Indices\Alias\Get;
 use Novaway\ElasticsearchBundle\Elastica\Index;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Novaway\ElasticsearchBundle\Exception\Index\FailureToMarkAsLiveException;
 
 class IndexProvider
 {
@@ -59,7 +60,11 @@ class IndexProvider
 
         if (true === $markAsLive) {
             // if it failed to mark as live, return current index
-            $index = $this->markAsLive($index, $removeOldIndexes) ? $index : $this->getIndex();
+            try {
+                $this->markAsLive($index, $removeOldIndexes);
+            } catch (FailureToMarkAsLiveException $e) {
+                $index = $this->getIndex();
+            }
         }
 
         return $index;
@@ -72,11 +77,11 @@ class IndexProvider
      * @param Index $index The index to link to the $this->name alias
      * @param bool $removeOldIndexes If true, remove the indexes currently linked to $this->name alias after marking $index as live
      *
-     * @return bool index is markedAsLive
+     * @throws FailureToMarkAsLiveException index is markedAsLive
      */
-    public function markAsLive(Index $index, bool $removeOldIndexes = true): bool
+    public function markAsLive(Index $index, bool $removeOldIndexes = true): void
     {
-        // Retrieve indexes currently pointing on the alias $this->>name
+        // Retrieve indexes currently pointing on the alias $this->name
         $oldIndexes = $this->getCurrentIndexes() ;
 
         try {
@@ -95,7 +100,7 @@ class IndexProvider
             }
             // and delete the failed one
             $index->delete();
-            return false;
+            throw new FailureToMarkAsLiveException($e->getMessage());
         }
         if ($removeOldIndexes) {
             // if everything went well, the new index is set as the alias
@@ -106,8 +111,6 @@ class IndexProvider
                 }
             }
         }
-
-        return true;
     }
     
     protected function getIndexByName($name): Index
