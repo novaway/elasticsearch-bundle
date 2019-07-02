@@ -17,6 +17,7 @@ trait SearchTrait
     public function search($query = '', $options = null): ResultSet
     {
         $timestamp = (string)microtime();
+
         $this->dispatch(new SearchQuery([
             'body' => $this->getQuery()->toArray() + $this->getOptions(),
             'type' => $this->getTypes(),
