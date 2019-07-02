@@ -3,42 +3,53 @@ declare(strict_types=1);
 
 namespace Novaway\ElasticsearchBundle\Elastica;
 
-use Elastica\ResultSet;
 use Elastica\Client;
 use Elastica\ResultSet\BuilderInterface;
-use Novaway\ElasticsearchBundle\Event\SearchQuery;
-use Novaway\ElasticsearchBundle\Event\SearchResult;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Novaway\ElasticsearchBundle\Elastica\Traits\SearchTrait;
+use Novaway\ElasticsearchBundle\Event\BaseEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface as OldEventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as NewEventDispatcherInterface;
 
-class Search extends \Elastica\Search
-{
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
-    public function __construct(EventDispatcherInterface $dispatcher, Client $client, BuilderInterface $builder = null)
+if (class_exists('Symfony\Contracts\EventDispatcher\EventDispatcherInterface')) {
+    class Search extends \Elastica\Search
     {
-        parent::__construct($client, $builder);
-        $this->dispatcher = $dispatcher;
-    }
+        use SearchTrait;
+        /**
+         * @var NewEventDispatcherInterface
+         */
+        private $dispatcher;
 
-    public function search($query = '', $options = null): ResultSet
+        public function __construct(NewEventDispatcherInterface $dispatcher, Client $client, BuilderInterface $builder = null)
+        {
+            parent::__construct($client, $builder);
+            $this->dispatcher = $dispatcher;
+        }
+
+        protected function dispatch(BaseEvent $event, string $eventName = null)
+        {
+            $this->dispatcher->dispatch($event, $eventName);
+        }
+
+    }
+} else {
+    class Search extends \Elastica\Search
     {
-        $timestamp = (string)microtime();
-        $this->dispatcher->dispatch(SearchQuery::NAME, new SearchQuery([
-            'body' => $this->getQuery()->toArray() + $this->getOptions(),
-            'type' => $this->getTypes(),
-            'indices' => $this->getIndices(),
-        ], $timestamp));
-        $result =  parent::search($query, $options);
+        use SearchTrait;
+        /**
+         * @var OldEventDispatcherInterface
+         */
+        private $dispatcher;
 
-        $this->dispatcher->dispatch(SearchResult::NAME, new SearchResult([
-            'query_time' => $result->getResponse()->getQueryTime(),
-            'response' => $result->getResponse()->getData()
-        ], $timestamp));
+        public function __construct(OldEventDispatcherInterface $dispatcher, Client $client, BuilderInterface $builder = null)
+        {
+            parent::__construct($client, $builder);
+            $this->dispatcher = $dispatcher;
+        }
 
-        return $result;
+        protected function dispatch(BaseEvent $event, string $eventName = null)
+        {
+            $this->dispatcher->dispatch($eventName, $event);
+        }
+
     }
-
 }
