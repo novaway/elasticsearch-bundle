@@ -5,18 +5,36 @@ declare(strict_types=1);
 namespace Novaway\ElasticsearchBundle\Traits;
 
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface as OldEventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as NewEventDispatcherInterface;
 
-trait EventDispatcherAwareTrait
-{
-    /** @var EventDispatcherInterface */
-    protected $dispatcher;
-
-    /**
-     * @required
-     */
-    public function setDispatcher(EventDispatcherInterface $dispatcher)
+if (in_array('Symfony\Contracts\EventDispatcher\EventDispatcherInterface', class_implements('\Symfony\Component\EventDispatcher\EventDispatcherInterface'))) {
+    trait EventDispatcherAwareTrait
     {
-        $this->dispatcher = $dispatcher;
+        /** @var NewEventDispatcherInterface */
+        protected $dispatcher;
+
+        /**
+         * @required
+         */
+        public function setDispatcher(NewEventDispatcherInterface $dispatcher)
+        {
+            $this->dispatcher = $dispatcher;
+        }
+    }
+} else {
+    trait EventDispatcherAwareTrait
+    {
+        /** @var OldEventDispatcherInterface */
+        protected $dispatcher;
+
+        /**
+         * @required
+         */
+        public function setDispatcher(OldEventDispatcherInterface $dispatcher)
+        {
+            $this->dispatcher = $dispatcher;
+        }
     }
 }
+
