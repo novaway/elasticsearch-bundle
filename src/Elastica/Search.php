@@ -10,7 +10,7 @@ use Novaway\ElasticsearchBundle\Event\BaseEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface as OldEventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as NewEventDispatcherInterface;
 
-if (in_array('\Symfony\Contracts\EventDispatcher\EventDispatcherInterface', class_implements('\Symfony\Component\EventDispatcher\EventDispatcherInterface'))) {
+if (in_array('Symfony\Contracts\EventDispatcher\EventDispatcherInterface', class_implements('\Symfony\Component\EventDispatcher\EventDispatcherInterface'))) {
     class Search extends \Elastica\Search
     {
         use SearchTrait;
@@ -19,7 +19,7 @@ if (in_array('\Symfony\Contracts\EventDispatcher\EventDispatcherInterface', clas
          */
         private $dispatcher;
 
-        public function __construct(Symfony\Contracts\EventDispatcher\EventDispatcherInterface $dispatcher, Client $client, BuilderInterface $builder = null)
+        public function __construct(NewEventDispatcherInterface $dispatcher, Client $client, BuilderInterface $builder = null)
         {
             parent::__construct($client, $builder);
             $this->dispatcher = $dispatcher;

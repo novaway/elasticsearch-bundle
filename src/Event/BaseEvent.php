@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Novaway\ElasticsearchBundle\Event;
 
-if (in_array('Symfony\Contracts\EventDispatcher\Event', class_implements('\Symfony\Component\EventDispatcher\Event'))) {
+if (in_array('Symfony\Contracts\EventDispatcher\EventDispatcherInterface', class_implements('\Symfony\Component\EventDispatcher\EventDispatcherInterface'))) {
     class BaseEvent extends \Symfony\Contracts\EventDispatcher\Event
     {
     }

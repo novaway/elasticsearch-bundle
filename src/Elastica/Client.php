@@ -8,7 +8,7 @@ use Novaway\ElasticsearchBundle\Elastica\Traits\ClientTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface as OldEventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as NewEventDispatcherInterface;
 
-if (in_array('\Symfony\Contracts\EventDispatcher\EventDispatcherInterface', class_implements('\Symfony\Component\EventDispatcher\EventDispatcherInterface'))) {
+if (in_array('Symfony\Contracts\EventDispatcher\EventDispatcherInterface', class_implements('\Symfony\Component\EventDispatcher\EventDispatcherInterface'))) {
     class Client extends \Elastica\Client
     {
         use ClientTrait;

@@ -5,6 +5,7 @@ namespace Novaway\ElasticsearchBundle\Elastica\Traits;
 
 use Elastica\ResultSet\BuilderInterface;
 use Novaway\ElasticsearchBundle\Exception\Connexion\TimeoutException;
+use Webmozart\Assert\Assert;
 
 trait ClientTrait
 {
