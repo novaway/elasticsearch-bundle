@@ -1,15 +1,12 @@
 <?php
 declare(strict_types=1);
 
-
 namespace Novaway\ElasticsearchBundle\Event;
-
 
 use Novaway\ElasticsearchBundle\Event\Behaviors\SearchEvent;
 use Novaway\ElasticsearchBundle\Event\Traits\SearchEventTrait;
-use Symfony\Component\EventDispatcher\Event;
 
-class SearchResult extends Event implements SearchEvent
+class SearchResult extends BaseEvent implements SearchEvent
 {
     use SearchEventTrait;
 

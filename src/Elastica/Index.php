@@ -5,29 +5,41 @@ namespace Novaway\ElasticsearchBundle\Elastica;
 
 
 use Elastica\Client;
-use Elastica\ResultSet\BuilderInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Novaway\ElasticsearchBundle\Elastica\Traits\IndexTrait;
 
-class Index extends \Elastica\Index
-{
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface as OldEventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as NewEventDispatcherInterface;
 
-    public function __construct(EventDispatcherInterface $dispatcher, Client $client, string $name)
+if (in_array('Symfony\Contracts\EventDispatcher\EventDispatcherInterface', class_implements('\Symfony\Component\EventDispatcher\EventDispatcherInterface'))) {
+    class Index extends \Elastica\Index
     {
-        parent::__construct($client, $name);
-        $this->dispatcher = $dispatcher;
+        use IndexTrait;
+        /**
+         * @var EventDispatcherInterface
+         */
+        private $dispatcher;
+
+        public function __construct(NewEventDispatcherInterface $dispatcher, Client $client, string $name)
+        {
+            parent::__construct($client, $name);
+            $this->dispatcher = $dispatcher;
+        }
+
     }
-
-
-    public function createSearch($query = '', $options = null, BuilderInterface $builder = null): Search
+} else {
+    class Index extends \Elastica\Index
     {
-        $search = new Search($this->dispatcher,  $this->getClient(), $builder);
-        $search->addIndex($this);
-        $search->setOptionsAndQuery($options, $query);
+        use IndexTrait;
+        /**
+         * @var EventDispatcherInterface
+         */
+        private $dispatcher;
 
-        return $search;
+        public function __construct(OldEventDispatcherInterface $dispatcher, Client $client, string $name)
+        {
+            parent::__construct($client, $name);
+            $this->dispatcher = $dispatcher;
+        }
+
     }
 }
