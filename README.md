@@ -13,7 +13,7 @@ composer require novaway/elasticsearch-bundle
 
 ## Service configuration
 
-You probably want to register the Client as a service, and 
+You probably want to register the Novaway\ElasticsearchBundle\Elastica\Client as a service, and set Elastica\Client as its alias 
 ```yml
 # config/services.yaml
 services:
