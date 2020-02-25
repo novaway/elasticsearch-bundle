@@ -72,6 +72,8 @@ class IndexProvider
      * @param Index $index The index to link to the $this->name alias
      * @param bool $removeOldIndexes If true, remove the indexes currently linked to $this->name alias after marking $index as live
      *
+     * @throws \Exception if the index couldn't be marked as live
+     *
      * @return bool index is markedAsLive
      */
     public function markAsLive(Index $index, bool $removeOldIndexes = true): bool
@@ -95,7 +97,7 @@ class IndexProvider
             }
             // and delete the failed one
             $index->delete();
-            return false;
+            throw $e;
         }
         if ($removeOldIndexes) {
             // if everything went well, the new index is set as the alias
@@ -109,7 +111,7 @@ class IndexProvider
 
         return true;
     }
-    
+
     protected function getIndexByName($name): Index
     {
         return new Index($this->eventDispatcher, $this->client, $name);
