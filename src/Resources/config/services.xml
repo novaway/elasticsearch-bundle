@@ -6,7 +6,6 @@
     <services>
         <defaults autoconfigure="true" autowire="true" public="false" />
 
-        <service id="Novaway\ElasticsearchBundle\Factory\ClientFactory" />
         <service id="Novaway\ElasticsearchBundle\DataCollector\ElasticsearchDataCollector">
             <tag name="data_collector"
                  template="@NovawayElasticsearch/data_collector/template.html.twig"
