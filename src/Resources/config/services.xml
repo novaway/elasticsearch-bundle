@@ -18,6 +18,10 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
+        <service id="Novaway\ElasticsearchBundle\Logger\ExceptionEventLogger">
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
         <service id="Novaway\ElasticsearchBundle\EventSubscriber\ResponseExceptionSubscriber">
             <tag name="kernel.event_subscriber"/>
         </service>
