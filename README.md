@@ -1,10 +1,10 @@
 # novaway/elasticsearch-bundle
 
-A bundle to integrate add debug information to elasticsearch/elasticsearch and ruflin/elastica in your Symfony Applications
+A bundle to add debug information to elasticsearch/elasticsearch and ruflin/elastica in your Symfony Applications
 
 ## Usage 
 
-The bundle provides a Elasticsearch\Client override, throwing events during search, and displaying it in the symfony toolbar.
+The bundle provides a Elastica\Client override, throwing events during search, and displaying it in the symfony toolbar.
 
 ## Installation
 ```
@@ -21,7 +21,7 @@ services:
     Novaway\ElasticsearchBundle\Elastica\Client:
         arguments:
             $config:
-                url: '%elasticsearch_host%/'
+                url: '%elasticsearch_host%'
 
     Elastica\Client: '@Novaway\ElasticsearchBundle\Elastica\Client'
 ```
@@ -36,7 +36,7 @@ And voila, when you use this client for search, the queries and requests will be
 novaway_elasticsearch:
     logging:
         enabled: false # if true, log every search request with a LoggerInterface service
-        logger: 'logger' # the logger service id
+        logger: 'logger' #the logger service id
 ```
 
 
