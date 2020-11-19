@@ -15,7 +15,7 @@ class ElasticsearchDataCollector  extends DataCollector implements EventSubscrib
     const QUERIES_KEY = 'queries';
     const RESULTS_KEY = 'results';
 
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, \Throwable $exception = null)
     {
         // everything is collected via Events
     }
