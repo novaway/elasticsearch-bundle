@@ -5,7 +5,7 @@ namespace Novaway\ElasticsearchBundle\EventSubscriber;
 
 use Elastica\Exception\ResponseException as ElasticaResponseException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpFoundation\Response;
 use Novaway\ElasticsearchBundle\Exception\Response\ResponseException;
@@ -20,15 +20,13 @@ class ResponseExceptionSubscriber implements EventSubscriberInterface
             ]
         ];
     }
-
-    public function process(GetResponseForExceptionEvent $event)
+    public function process(ExceptionEvent $event)
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
         if (!$exception instanceof ElasticaResponseException) {
             return;
         }
-        
         $response = new ResponseException($exception->getRequest(), $exception->getResponse());
-        $event->setException($response);
+        $event->setThrowable($response);
     }
 }
