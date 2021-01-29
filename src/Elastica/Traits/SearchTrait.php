@@ -8,6 +8,7 @@ namespace Novaway\ElasticsearchBundle\Elastica\Traits;
 use Elastica\Exception\ClientException;
 use Elastica\Exception\Connection\HttpException;
 use Elastica\Response;
+use Elastica\Request;
 use Elastica\ResultSet;
 use Novaway\ElasticsearchBundle\Event\ExceptionEvent;
 use Novaway\ElasticsearchBundle\Event\SearchQuery;
@@ -18,13 +19,12 @@ use Novaway\ElasticsearchBundle\Event\SearchResult;
  */
 trait SearchTrait
 {
-    public function search($query = '', $options = null): ResultSet
+    public function search($query = '', $options = null, string $method = Request::POST): ResultSet
     {
         $timestamp = (string)microtime();
 
         $this->dispatch(new SearchQuery([
             'body' => $this->getQuery()->toArray() + $this->getOptions(),
-            'type' => $this->getTypes(),
             'indices' => $this->getIndices(),
         ], $timestamp), SearchQuery::NAME);
         try {
@@ -40,7 +40,6 @@ trait SearchTrait
         } catch (\Exception $e) {
             $this->dispatch(new ExceptionEvent([
                 'body' => $this->getQuery()->toArray() + $this->getOptions(),
-                'type' => $this->getTypes(),
                 'indices' => $this->getIndices(),
             ], $e), ExceptionEvent::NAME);
             switch (true) {
