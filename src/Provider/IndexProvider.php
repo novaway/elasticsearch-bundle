@@ -34,6 +34,11 @@ class IndexProvider
         $this->config = $config;
     }
 
+    public function getConfig(): array
+    {
+        return $this->config;
+    }
+
     public function getIndex(): Index
     {
         return new Index($this->eventDispatcher, $this->client, $this->name);
@@ -63,6 +68,27 @@ class IndexProvider
         }
 
         return $index;
+    }
+
+    /**
+     * Update fields mapping
+     */
+    public function rebuildMapping(): Index
+    {
+        $realName = sprintf('%s_rebuild_mapping_%s', $this->name, date('YmdHis'));
+        $index = $this->getIndexByName($realName);
+        $index->create($this->config);
+
+        $this->client->request('_reindex', Request::POST,[
+            'source' => [
+                'index' => $this->name,
+            ],
+            'dest' => [
+                'index' => $realName,
+            ]
+        ]);
+
+        return $this->markAsLive($index, false) ? $index : $this->getIndex();
     }
 
     /**
