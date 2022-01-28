@@ -21,17 +21,26 @@ class IndexProvider
     private $name;
     /** @var array */
     private $config;
+    /** @var int */
+    private $sliceThreadNumber;
 
     public function __construct(
         Client $client,
         EventDispatcherInterface $eventDispatcher,
         string $name,
-        array $config
+        array $config,
+        int $sliceThreadNumber = 4
     ) {
         $this->client = $client;
         $this->eventDispatcher = $eventDispatcher;
         $this->name = $name;
         $this->config = $config;
+        $this->sliceThreadNumber = $sliceThreadNumber;
+    }
+
+    public function getConfig(): array
+    {
+        return $this->config;
     }
 
     public function getIndex(): Index
@@ -63,6 +72,27 @@ class IndexProvider
         }
 
         return $index;
+    }
+
+    /**
+     * Update fields mapping
+     */
+    public function rebuildMapping(): Index
+    {
+        $realName = sprintf('%s_rebuild_mapping_%s', $this->name, date('YmdHis'));
+        $index = $this->getIndexByName($realName);
+        $index->create($this->config);
+
+        $this->client->request('_reindex?slices='.$this->sliceThreadNumber, Request::POST,[
+            'source' => [
+                'index' => $this->name,
+            ],
+            'dest' => [
+                'index' => $realName,
+            ]
+        ]);
+
+        return $this->markAsLive($index, false) ? $index : $this->getIndex();
     }
 
     /**
