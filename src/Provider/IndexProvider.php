@@ -77,13 +77,14 @@ class IndexProvider
     /**
      * Update fields mapping
      */
-    public function rebuildMapping(): Index
+    public function rebuildMapping(bool $waitForCompletion = true): Index
     {
         $realName = sprintf('%s_rebuild_mapping_%s', $this->name, date('YmdHis'));
         $index = $this->getIndexByName($realName);
         $index->create($this->config);
 
-        $this->client->request('_reindex?slices='.$this->sliceThreadNumber, Request::POST,[
+        $strWaitForCompletion = $waitForCompletion ? 'true' : 'false';
+        $this->client->request("_reindex?wait_for_completion=$strWaitForCompletion&slices=$this->sliceThreadNumber", Request::POST,[
             'source' => [
                 'index' => $this->name,
             ],
