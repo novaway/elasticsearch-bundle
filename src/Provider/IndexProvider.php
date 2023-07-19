@@ -77,7 +77,7 @@ class IndexProvider
     /**
      * Update fields mapping
      */
-    public function rebuildMapping(bool $waitForCompletion = true): Index
+    public function rebuildMapping(bool $waitForCompletion = true, bool $removeOldIndexes = false): Index
     {
         $realName = sprintf('%s_rebuild_mapping_%s', $this->name, date('YmdHis'));
         $index = $this->getIndexByName($realName);
@@ -93,7 +93,7 @@ class IndexProvider
             ]
         ]);
 
-        return $this->markAsLive($index, false) ? $index : $this->getIndex();
+        return $this->markAsLive($index, $removeOldIndexes) ? $index : $this->getIndex();
     }
 
     /**
