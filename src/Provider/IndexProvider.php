@@ -143,7 +143,7 @@ class IndexProvider
         return true;
     }
 
-    protected function getIndexByName($name): Index
+    public function getIndexByName($name): Index
     {
         return new Index($this->eventDispatcher, $this->client, $name);
     }
