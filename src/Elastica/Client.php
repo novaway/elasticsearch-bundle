@@ -7,6 +7,7 @@ namespace Novaway\ElasticsearchBundle\Elastica;
 use Novaway\ElasticsearchBundle\Elastica\Traits\ClientTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface as OldEventDispatcherInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface as NewEventDispatcherInterface;
+use Symfony\Contracts\Service\Attribute\Required;
 
 if (in_array('Symfony\Contracts\EventDispatcher\EventDispatcherInterface', class_implements('\Symfony\Component\EventDispatcher\EventDispatcherInterface'))) {
     class Client extends \Elastica\Client
@@ -18,6 +19,7 @@ if (in_array('Symfony\Contracts\EventDispatcher\EventDispatcherInterface', class
         /**
          * @required
          */
+        #[Required]
         public function setEventDispatcher(NewEventDispatcherInterface $eventDispatcher)
         {
             $this->eventDispatcher = $eventDispatcher;
