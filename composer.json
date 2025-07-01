@@ -8,18 +8,18 @@
   "require": {
     "php": "^7.1 || ^8.0",
     "elasticsearch/elasticsearch": "^5.2 || ^6.0 || ^7.0",
-    "ruflin/elastica": "^6.0 || ^7.0",
-    "symfony/http-kernel": "^4.3 || >=5.1.5",
-    "symfony/dependency-injection": "^4.2 || ^5.0 || ^6.0",
-    "symfony/web-profiler-bundle": "^4.2 || ^5.0 || ^6.0",
-    "symfony/config": "^4.2 || ^5.0 || ^6.0",
-    "symfony/serializer": "^4.2 || ^5.0 || ^6.0",
+    "ruflin/elastica": "^6.0 || ^7.0 || ^8.0",
+    "symfony/http-kernel": ">=5.1.5",
+    "symfony/dependency-injection": "^6.0 || ^7.3",
+    "symfony/web-profiler-bundle": "^6.0 || ^7.3",
+    "symfony/config": "^6.0 || ^7.3",
+    "symfony/serializer": "^6.0 || ^7.3",
     "webmozart/assert": "^1.0",
     "ext-curl": "*"
   },
   "require-dev": {
-    "symfony/var-dumper": "^4.1",
-    "phpstan/phpstan": "^0.11.2"
+    "symfony/var-dumper": "^6.0 || ^7.0",
+    "phpstan/phpstan": "^2.1.10"
   },
   "autoload": {
     "psr-4": {
