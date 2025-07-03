@@ -16,16 +16,12 @@ use Symfony\Component\Serializer\Serializer;
 
 class ExceptionEventLogger implements EventSubscriberInterface
 {
-    /** @var LoggerInterface */
-    private $logger;
-
     public function __construct(
-        LoggerInterface $logger
+        private LoggerInterface $logger
     ) {
-        $this->logger = $logger;
     }
 
-    public function logException(ExceptionEvent $event)
+    public function logException(ExceptionEvent $event): void
     {
         $serializer = new Serializer([new ArrayDenormalizer(), new ObjectNormalizer()], [new JsonEncoder()]);
 
@@ -35,8 +31,8 @@ class ExceptionEventLogger implements EventSubscriberInterface
         ]);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
-        yield ExceptionEvent::NAME => 'logException';
+        return [ExceptionEvent::NAME => 'logException'];
     }
 }

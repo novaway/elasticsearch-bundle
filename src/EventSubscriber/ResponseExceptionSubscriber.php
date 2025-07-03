@@ -12,7 +12,7 @@ use Novaway\ElasticsearchBundle\Exception\Response\ResponseException;
 
 class ResponseExceptionSubscriber implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::EXCEPTION => [
@@ -20,7 +20,7 @@ class ResponseExceptionSubscriber implements EventSubscriberInterface
             ]
         ];
     }
-    public function process(ExceptionEvent $event)
+    public function process(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
         if (!$exception instanceof ElasticaResponseException) {

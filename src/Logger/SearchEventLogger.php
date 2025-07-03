@@ -10,23 +10,22 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class SearchEventLogger implements EventSubscriberInterface
 {
-    /** @var LoggerInterface */
-    private $logger;
-
     public function __construct(
-        LoggerInterface $logger
+        private LoggerInterface $logger
     ) {
-        $this->logger = $logger;
     }
 
-    public function logInfo(SearchEvent $event)
+    public function logInfo(SearchEvent $event): void
     {
-        $this->logger->info(sprintf('Novaway ES : Name %s; Ts %s; Body %s', $event::getName(), $event->getTimestamp(), json_encode($event->getBody())));
+        $this->logger->info(sprintf('Novaway ES : Name %s; Ts %s; Body %s', $event::getName(), $event->getTimestamp(),
+            json_encode($event->getBody())));
     }
-    
-    public static function getSubscribedEvents()
+
+    public static function getSubscribedEvents(): array
     {
-        yield SearchQuery::NAME => 'logInfo';
-        yield SearchResult::NAME => 'logInfo';
+        return [
+            SearchQuery::NAME => 'logInfo',
+            SearchResult::NAME => 'logInfo',
+        ];
     }
 }
