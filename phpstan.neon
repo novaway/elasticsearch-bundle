@@ -1,2 +1,9 @@
+includes:
+    - phpstan-baseline.neon
+
 parameters:
     level: 7
+    paths:
+        - src
+    excludePaths:
+        - src/Event/BaseEvent.php
