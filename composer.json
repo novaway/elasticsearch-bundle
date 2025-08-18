@@ -1,12 +1,15 @@
 {
   "name": "novaway/elasticsearch-bundle",
-  "type": "symfony-bundle",
   "description": "Symfony bundle to add debug information to elasticsearch/elasticsearch and ruflin/elastica",
-  "keywords": ["elasticsearch"],
-  "homepage": "https://github.com/novaway/elasticsearch-bundle",
   "license": "MIT",
+  "type": "symfony-bundle",
+  "keywords": [
+    "elasticsearch"
+  ],
+  "homepage": "https://github.com/novaway/elasticsearch-bundle",
   "require": {
     "php": "^8.0",
+    "ext-curl": "*",
     "elasticsearch/elasticsearch": "^5.2 || ^6.0 || ^7.0",
     "ruflin/elastica": "^6.0 || ^7.0 || ^8.0",
     "symfony/http-kernel": ">=5.1.5",
@@ -18,12 +21,22 @@
     "ext-curl": "*"
   },
   "require-dev": {
-    "symfony/var-dumper": "^6.0 || ^7.0",
-    "phpstan/phpstan": "^2.1.10"
+    "ergebnis/composer-normalize": "^2.47",
+    "phpstan/phpstan": "^2.1.10",
+    "symfony/var-dumper": "^6.0 || ^7.0"
   },
   "autoload": {
     "psr-4": {
       "Novaway\\ElasticsearchBundle\\": "src/"
     }
+  },
+  "config": {
+    "allow-plugins": {
+      "ergebnis/composer-normalize": true
+    }
+  },
+  "scripts": {
+    "phpstan": "phpstan analyse",
+    "phpstan:baseline": "phpstan analyse --generate-baseline"
   }
 }
