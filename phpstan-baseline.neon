@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Method Novaway\\ElasticsearchBundle\\DataCollector\\ElasticsearchDataCollector\:\:collect\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/DataCollector/ElasticsearchDataCollector.php
-
-		-
 			message: '#^Method Novaway\\ElasticsearchBundle\\DataCollector\\ElasticsearchDataCollector\:\:getQueries\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -16,30 +10,6 @@ parameters:
 			message: '#^Method Novaway\\ElasticsearchBundle\\DataCollector\\ElasticsearchDataCollector\:\:getResults\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
-			path: src/DataCollector/ElasticsearchDataCollector.php
-
-		-
-			message: '#^Method Novaway\\ElasticsearchBundle\\DataCollector\\ElasticsearchDataCollector\:\:onSearchQuery\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/DataCollector/ElasticsearchDataCollector.php
-
-		-
-			message: '#^Method Novaway\\ElasticsearchBundle\\DataCollector\\ElasticsearchDataCollector\:\:onSearchResult\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/DataCollector/ElasticsearchDataCollector.php
-
-		-
-			message: '#^Method Novaway\\ElasticsearchBundle\\DataCollector\\ElasticsearchDataCollector\:\:reset\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/DataCollector/ElasticsearchDataCollector.php
-
-		-
-			message: '#^Yield can be used only with these return types\: Generator, Iterator, Traversable, iterable\.$#'
-			identifier: generator.returnType
-			count: 2
 			path: src/DataCollector/ElasticsearchDataCollector.php
 
 		-
@@ -221,42 +191,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: src/Event/SearchResult.php
-
-		-
-			message: '#^Method Novaway\\ElasticsearchBundle\\EventSubscriber\\ResponseExceptionSubscriber\:\:process\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/EventSubscriber/ResponseExceptionSubscriber.php
-
-		-
-			message: '#^Method Novaway\\ElasticsearchBundle\\Logger\\ExceptionEventLogger\:\:logException\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Logger/ExceptionEventLogger.php
-
-		-
-			message: '#^Yield can be used only with these return types\: Generator, Iterator, Traversable, iterable\.$#'
-			identifier: generator.returnType
-			count: 1
-			path: src/Logger/ExceptionEventLogger.php
-
-		-
-			message: '#^Method Novaway\\ElasticsearchBundle\\Logger\\SearchEventLogger\:\:logInfo\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Logger/SearchEventLogger.php
-
-		-
-			message: '#^Yield can be used only with these return types\: Generator, Iterator, Traversable, iterable\.$#'
-			identifier: generator.returnType
-			count: 2
-			path: src/Logger/SearchEventLogger.php
-
-		-
-			message: '#^Method Novaway\\ElasticsearchBundle\\NovawayElasticsearchBundle\:\:build\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/NovawayElasticsearchBundle.php
 
 		-
 			message: '#^Method Novaway\\ElasticsearchBundle\\Provider\\IndexProvider\:\:__construct\(\) has parameter \$config with no value type specified in iterable type array\.$#'
