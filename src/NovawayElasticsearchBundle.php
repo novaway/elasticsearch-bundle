@@ -14,4 +14,9 @@ class NovawayElasticsearchBundle extends Bundle
     {
         $container->addCompilerPass(new ConfigureLoggerPass());
     }
+
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
+    }
 }

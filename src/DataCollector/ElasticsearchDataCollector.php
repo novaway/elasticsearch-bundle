@@ -10,22 +10,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
-class ElasticsearchDataCollector  extends DataCollector implements EventSubscriberInterface
+class ElasticsearchDataCollector extends DataCollector implements EventSubscriberInterface
 {
     const QUERIES_KEY = 'queries';
     const RESULTS_KEY = 'results';
 
-    public function collect(Request $request, Response $response, \Throwable $exception = null)
+    public function collect(Request $request, Response $response, \Throwable $exception = null): void
     {
         // everything is collected via Events
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'novaway_elasticsearch.data_collector';
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->data = [
             self::QUERIES_KEY => [],
@@ -43,20 +43,22 @@ class ElasticsearchDataCollector  extends DataCollector implements EventSubscrib
         return $this->data[self::RESULTS_KEY] ?? [];
     }
 
-    public function onSearchQuery(SearchQuery $event)
+    public function onSearchQuery(SearchQuery $event): void
     {
         $this->data[self::QUERIES_KEY][$event->getTimestamp()] = $event->getBody();
     }
 
-    public function onSearchResult(SearchResult $event)
+    public function onSearchResult(SearchResult $event): void
     {
         $this->data[self::RESULTS_KEY][$event->getTimestamp()] = $event->getBody();
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
-        yield SearchQuery::NAME => 'onSearchQuery';
-        yield SearchResult::NAME => 'onSearchResult';
+        return [
+            SearchQuery::NAME => 'onSearchQuery',
+            SearchResult::NAME => 'onSearchResult',
+        ];
     }
 
 

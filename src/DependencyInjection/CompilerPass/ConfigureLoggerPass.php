@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 class ConfigureLoggerPass implements CompilerPassInterface
 {
+    /** @return void */
     public function process(ContainerBuilder $container)
     {
         $config = $container->getParameter('novaway_elasticsearch.logging');
