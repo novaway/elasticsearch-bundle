@@ -13,7 +13,7 @@ parameters:
 			path: src/DataCollector/ElasticsearchDataCollector.php
 
 		-
-			message: '#^Cannot access offset ''enabled'' on array\|bool\|float\|int\|string\|UnitEnum\.$#'
+			message: '#^Cannot access offset ''enabled'' on array\|bool\|float\|int\|string\|UnitEnum\|null\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/DependencyInjection/CompilerPass/ConfigureLoggerPass.php
@@ -29,6 +29,12 @@ parameters:
 			identifier: varTag.nativeType
 			count: 1
 			path: src/DependencyInjection/Configuration.php
+
+		-
+			message: '#^Call to static method Webmozart\\Assert\\Assert\:\:notNull\(\) with array\|bool\|string will always evaluate to true\.$#'
+			identifier: staticMethod.alreadyNarrowedType
+			count: 2
+			path: src/Elastica/Client.php
 
 		-
 			message: '#^Method Novaway\\ElasticsearchBundle\\Elastica\\Client\:\:setEventDispatcher\(\) has no return type specified\.$#'
